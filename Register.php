@@ -18,7 +18,7 @@ and open the template in the editor.
             <div class ="row main">
                 <div class ="main-login main-center">
                     <h2>Sign Up</h2>
-                    <form name="login" action="http://146.64.213.194/Bokang/API/insertUser" method="POST">
+                    <form name="login" action="http://146.64.204.58/Bokang/API/insertUser" method="POST">
                         <div class ="form-group">
                             <label for="user_fullname" class="cols-sm-2 control-label">Full Names</label>
                             <div class ="cols-sm-10">
@@ -61,11 +61,11 @@ and open the template in the editor.
                         </div>
 
                         <div class ="form-group">
-                            <label for="user_ipaddres" class="cols-sm-2 control-label">IP Address</label>
+                            <label for="user_ipaddress" class="cols-sm-2 control-label">IP Address/URL</label>
                             <div class ="cols-sm-10">
                                 <div class ="input-group">
                                     <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
-                                    <input type="text" id ="user_ipaddres" required name="user_ipaddres" value="" class ="form-control" placeholder="Enter IP Addres" /> <!--- Email input box--->
+                                    <input type="text" id ="user_ipaddress" required name="user_ipaddress" value="" class ="form-control" placeholder="Enter IP Addres" /> <!--- Email input box--->
                                 </div>
                             </div>
                         </div>

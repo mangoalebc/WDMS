@@ -5,12 +5,14 @@
 	class API extends REST {
 
 		public $data = "";
-                public $url = "http://146.64.213.194/Bokang/Home.php";
-                public $url2 = "http://146.64.213.194/Bokang/Unsuccessful.php";
-                public $url3 = "http://146.64.213.194/Bokang/ViewUsers.php";
-                public $url4 = "http://146.64.213.194/Bokang/index.php";
-                public $url5 = "http://146.64.213.194/Bokang/Register.php";
-                public $url6 = "http://146.64.213.194/Bokang/Requirements.php";
+                public $url = "http://146.64.204.58/Bokang/Home.php";
+                public $url2 = "http://146.64.204.58/Bokang/Unsuccessful.php";
+                public $url3 = "http://146.64.204.58/Bokang/ViewUsers.php";
+                public $url4 = "http://146.64.204.58/Bokang/index.php";
+                public $url5 = "http://146.64.204.58/Bokang/Register.php";
+                public $url6 = "http://146.64.204.58/Bokang/Requirements.php";
+                public $url7 = "http://146.64.204.58/Bokang/PasswordMatch.php";
+                public $url8 = "http://146.64.204.58/Bokang/InvalidEmail.php";
                 public $emailErr = "";
                 public $passErr = "";
                 public $passConfErr = "";
@@ -96,6 +98,25 @@ const DB = "academycity";
                              die();
                             }                          
                 }
+
+                 public function PassMatch (){
+                    if (headers_sent()){
+                        die('<script type="text/javascript">window.location.href="' . $this->url7 . '";</script>');
+                            }else{
+                                  header('Location: ' . $this->url7);
+                             die();
+                            }
+                }
+
+
+                public function InvalidEmail (){
+                    if (headers_sent()){
+                        die('<script type="text/javascript">window.location.href="' . $this->url8 . '";</script>');
+                            }else{
+                                  header('Location: ' . $this->url8);
+                             die();
+                            }
+                }
                 
                 public function Errors(){
 
@@ -124,10 +145,21 @@ const DB = "academycity";
                 }
 
 
-           //close the connection
-                                        
+               Public function pingAddress($ip) {
+
+                  $pingresult = exec("ping  -n 3 $ip", $outcome, $status);
+                  if (0 == $status) {
+                    //$status = "alive => ( ".print_r($outcome)." )";
+                  } else if (1 == $status) {
+                       $status = "dead";
+                  }
+                  else{
+		 $status = "poor";
+                 }
 
 
+
+                }
 
 		/*
 		 *	Simple login API
@@ -240,53 +272,69 @@ const DB = "academycity";
 
 		private function insertUser()
 		{
-			if($_SERVER['REQUEST_METHOD'] == "POST"){
-				$user_fullname = isset($_POST['user_fullname']) ? mysql_real_escape_string($_POST['user_fullname']) : "";
-				$user_email = isset($_POST['user_email']) ? mysql_real_escape_string($_POST['user_email']) : "";
-				$user_password = isset($_POST['user_password']) ? mysql_real_escape_string($_POST['user_password']) : "";
-				$user_ipaddress = isset($_POST['user_ipaddress']) ? mysql_real_escape_string($_POST['user_ipaddress']) : "";
-                                $user_passwordconf = isset($_POST['user_passwordconf']) ? mysql_real_escape_string($_POST['user_passwordconf']) : "";
-				
-                                //validate ip address
-                                 if (!filter_var($ip, FILTER_VALIDATE_IP) === false) {
+                    if($_SERVER['REQUEST_METHOD'] == "POST")
+                    {
+                       $user_fullname = isset($_POST['user_fullname']) ? mysql_real_escape_string($_POST['user_fullname']) : "";
+                       $user_email = isset($_POST['user_email']) ? mysql_real_escape_string($_POST['user_email']) : "";
+                       $user_password = isset($_POST['user_password']) ? mysql_real_escape_string($_POST['user_password']) : "";
+                       $user_ipaddress = isset($_POST['user_ipaddress']) ? mysql_real_escape_string($_POST['user_ipaddress']) : "";
+                       $user_passwordconf = isset($_POST['user_passwordconf']) ? mysql_real_escape_string($_POST['user_passwordconf']) : ""; 
+                       
+                       //Validate email
+                       if(filter_var($user_email, FILTER_VALIDATE_EMAIL))
+                       {
 
-                                     if(preg_match('/^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%]{8,16}$/', $user_password) && !preg_match('/^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%]{8,12}$/', $user_passwordconf)){
+                           if(preg_match('/^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%]{8,16}$/', $user_password) && preg_match('/^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%]{8,16}$/', $user_passwordconf))
+                           {
+                                if ($user_password == $user_passwordconf ) {   //check if passwords match
 
-                                           //$this->PasswordError();
+                                    $user_passwordhash = hash('sha256', $user_password); //hash password
 
-                                           if ($user_password == $user_passwordconf ) { //check if passwords match
+                                    $pingresult = exec("ping  -n 3 $user_ipaddress", $outcome, $status);
 
-                                               if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                                    if(0 == $status)
+                                    {                                      
+                                        //Insert data into data base
+                                        $sql = mysql_query("INSERT INTO users (user_fullname, user_email, user_password, user_ipaddress) VALUES ('$user_fullname', '$user_email', '".md5($user_passwordhash)."', '$user_ipaddress')");
+                                        $this->response('User added successfully',200);
 
-                                                   $user_passwordhash = hash('sha256', $user_password); //hash password
+                                        $qur = $conn->query($sql);
+                                    }
 
-                                                   //Insert data into data base
-                                                    $sql = mysql_query("INSERT INTO users (user_fullname, user_email, user_password, user_ipaddress) VALUES ('$user_fullname', '$user_email', '".md5($user_passwordhash)."', '$user_ipaddress')");
-                                                    $this->response('User added successfully',200);
+                                    else if (1 == $status)
+                                    {
+                                        $this->response('Invalid IP Address/URL',203);
+                                    }
+                                    else
+                                    {
+                                        $this->response('Poor',203);
+                                    }
+                                }
 
-                                                    $qur = $conn->query($sql);
+                                //echo "Passwords don't match";
+                                $this->response('Passwords do not match',203);
+                           }
 
-                                               }
-                                               else
-                                                   $this-> GoBackRegister();
- 
-                                           }
-                                           else
-                                               $this-> GoBackRegister();
-                                 }
-                                 else
-                                     $this->PasswordError();
-                               }
-                                else
-                                     $this-> GoBackRegister();
-                                                                                                 
-                        }			
-				$mysqli_close($conn);
+                           else
+                           {
+                               //echo "Password does't meet requirements";
+                               $this->response("Password does't meet requirements",203);
+                           }
+                       }
+                       else
+                       {
+                           //echo "Invalid email";
+                           $this->response('Invalid email',203);
+                       }
+                    }
 
-/* Output header */
- header('Content-type: application/json');
- echo json_encode($json);
-		}
+                    $mysqli_close($conn);
+
+                    /* Output header */
+                    header('Content-type: application/json');
+                    echo json_encode($json);
+                }
+			
 
 		private function updateUser()
 		{
