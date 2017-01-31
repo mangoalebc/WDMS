@@ -101,7 +101,7 @@
 
                </thead>
              </tbody>
-            </table>
+            </table> 
 
           </div>
 

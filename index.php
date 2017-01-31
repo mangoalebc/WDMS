@@ -10,7 +10,7 @@
             <div class ="row main">
                 <div class ="main-login main-center">
                     <h2>Sign In</h2>
-                    <form name="login" action="http://146.64.213.194/Bokang/API/login" method="POST">
+                    <form name="login" action="http://146.64.204.58/Bokang/API/login" method="POST">
                         <div class ="form-group">
                             <label for="user_email" class="cols-sm-2 control-label">E-mail</label>
                             <div class ="cols-sm-10">
@@ -34,7 +34,7 @@
                             <input type="submit" value="Login" name="login" id="button" class="btn btn-primary btn-lg btn-block login-button"/>
                         </div>
 
-                       <label class="cols-sm-2 control-label">Not yet a memeber? <a href="http://146.64.213.194/Bokang/Register.php">Sign Up Now</a> </label>
+                       <label class="cols-sm-2 control-label">Not yet a memeber? <a href="http://146.64.204.58/Bokang/Register.php">Sign Up Now</a> </label>
 
                     </form>
                     <?php
