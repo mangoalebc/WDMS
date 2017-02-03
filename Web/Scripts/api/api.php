@@ -15,9 +15,7 @@
         public $passErr = "";
         public $passConfErr = "";
         public $ipErr = "";
-        //Script Variables
-        //public dir = getcwd();
-        //public $dir2 = "../Test3/";
+       
                 
 		const DB_SERVER = "localhost";
 		const DB_USER = "root";

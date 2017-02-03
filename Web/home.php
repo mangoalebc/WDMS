@@ -29,7 +29,7 @@
                               </tr>
 
                             <?php
-							$loadUploads = file_get_contents("http://127.0.0.1/projects/web/scripts/Update.php");		
+							//$loadUploads = file_get_contents("http://127.0.0.1/projects/web/scripts/Update.php");		
 							
 							//echo $loadUploads;
 							
